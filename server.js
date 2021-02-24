@@ -1,4 +1,6 @@
 import express from 'express'
+import bcrypt from 'bcrypt-nodejs'
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
@@ -20,9 +22,17 @@ const db = {
             entries: 0,
             joined: new Date()
         }
+    ],
+    login: [
+        {
+            id: '987',
+            hash: '',
+            email: 'john@gmail.com'
+        }
     ]
 }
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -31,7 +41,7 @@ app.get('/', (req, res) => {
 
 app.post('/signin', (req, res) => {
     if (req.body.email === db.users[0].email && req.body.password === db.users[0].password) {
-        res.json('Success!')
+        res.json(db.users[0])
     } else {
         res.status(400).json('error')
     }
@@ -39,11 +49,13 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body;
+    bcrypt.hash(password, null, null, function(err, hash) {
+        console.log(hash);
+    });
     db.users.push( {
         id: '125',
         name: name,
         email: email,
-        password: password,
         entries: 0,
         joined: new Date()
     })
@@ -71,12 +83,21 @@ app.put('/image', (req, res) => {
         if (user.id === id) {
             found = true;
             user.entries++;
-           return res.json(user.entries);
+            return res.json(user.entries);
         } 
     })
     if (!found) {
-        res.status(404).json('No such users')
+        res.status(404)
     }
 })    
+
+
+// // Load hash from your password DB.
+// bcrypt.compare("bacon", hash, function(err, res) {
+//     // res == true
+// });
+// bcrypt.compare("veggies", hash, function(err, res) {
+//     // res = false
+// });
 
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`))
