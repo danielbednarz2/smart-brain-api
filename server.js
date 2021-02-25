@@ -23,9 +23,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello')
-})
+app.get('/', (req, res) => res.send('Hello'))
 
 app.post('/signin', (req, res) => { handleSignIn(req, res, postgres, bcrypt)})
 
