@@ -7,13 +7,15 @@ import handleSignIn from './controllers/SignIn.js';
 import handleProfile from './controllers/Profile.js';
 import { handleImage, handleApiCall } from './controllers/Image.js';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0; 
+
 const postgres = knex({
     client: 'pg',
     connection: {
-        host: 'localhost',
-        database: 'smart_brain',
-        user: 'Daniel Walker',
-        password: ' '
+        host: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     }
 })
 
