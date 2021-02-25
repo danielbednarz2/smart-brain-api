@@ -18,7 +18,7 @@ const postgres = knex({
 })
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
@@ -37,4 +37,4 @@ app.put('/image', (req, res) => { handleImage(req, res, postgres)})
 
 app.post('/imageurl', (req, res) => { handleApiCall(req, res)})
 
-app.listen(PORT, () => console.log(`App is running on port ${PORT}`))
+app.listen(PORT || 3000, () => console.log(`App is running on port ${PORT}`))
